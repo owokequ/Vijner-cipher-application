@@ -2,6 +2,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -14,114 +16,168 @@ import javafx.stage.Stage;
 */ 
 
 public class Main extends Application {
+    private Logic logic = new Logic();
+    
     @Override
     public void start(Stage stage) {
-        Logic logic = new Logic();
-        Label label = new Label("Выберите 1 из вариантов"); // создает надпись
-        TextField textEncrypt = new TextField();
-        textEncrypt.setPromptText("Тут появится текст шифровки/расшифровки");
-        // Стили для поля результата
-        textEncrypt.setStyle("-fx-background-color: #f5f5f5; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #3498db; -fx-border-radius: 5; -fx-background-radius: 5;");
-
-        Main main = new Main();
-
-        label.setStyle("-fx-font-family: 'Noto-sans'; -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 2, 2);");
+        // Создаём панель с вкладками
+        TabPane tabPane = new TabPane();
         
-        Button encryption = new Button("Шифровка"); // создает кнопку 
-        Button decryption = new Button("Расшифровка"); // создает кнопку 
-        Button decipherment = new Button("Дешифровка"); // создает кнопку 
-        
-        // Стили для кнопок
-        String buttonStyle = "-fx-background-color: linear-gradient(to bottom, #3498db, #2980b9); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 1, 1);";
-        String buttonHoverStyle = "-fx-background-color: linear-gradient(to bottom, #3cb0fd, #3498db); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 2, 2);";
-        
-        encryption.setStyle(buttonStyle);
-        decryption.setStyle(buttonStyle);
-        decipherment.setStyle(buttonStyle);
-        
-        // Эффекты при наведении
-        encryption.setOnMouseEntered(e -> encryption.setStyle(buttonHoverStyle));
-        encryption.setOnMouseExited(e -> encryption.setStyle(buttonStyle));
-        decryption.setOnMouseEntered(e -> decryption.setStyle(buttonHoverStyle));
-        decryption.setOnMouseExited(e -> decryption.setStyle(buttonStyle));
-        decipherment.setOnMouseEntered(e -> decipherment.setStyle(buttonHoverStyle));
-        decipherment.setOnMouseExited(e -> decipherment.setStyle(buttonStyle));
+        // Вкладка 1: Шифровка
+        Tab encryptTab = new Tab("Шифровка");
+        Tab decryptTab = new Tab("Расшифровка");
 
-        TextField textForEncr = new TextField();
-        textForEncr.setPromptText("Введите текст для шифровки/расшифровки/дешифровки...");
-        // Стили для поля ввода текста
-        textForEncr.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-prompt-text-fill: #95a5a6;");
-        // Эффект при фокусе
-        textForEncr.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                textForEncr.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #3498db; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-prompt-text-fill: #95a5a6;");
-            } else {
-                textForEncr.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-prompt-text-fill: #95a5a6;");
-            }
-        });
+        encryptTab.setClosable(false); // нельзя закрыть
+        decryptTab.setClosable(false);        
+        // Содержимое вкладки
+        VBox encryptContent = new VBox(10);
+        encryptContent.setStyle("-fx-padding: 20; -fx-background-color: #ecf0f1;");
+        
+        VBox dencryptContent = new VBox(10);
+        dencryptContent.setStyle("-fx-padding: 20; -fx-background-color: #ecf0f1;");
 
-        TextField textKey = new TextField();
-        textKey.setPromptText("Введите ключ...");
-        // Стили для поля ввода ключа
-        textKey.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-prompt-text-fill: #95a5a6;");
-        // Эффект при фокусе
-        textKey.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                textKey.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #3498db; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5; -fx-prompt-text-fill: #95a5a6;");
-            } else {
-                textKey.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-background-radius: 5; -fx-prompt-text-fill: #95a5a6;");
-            }
-        });
+        // Заголовок
+        Label titleLabel1 = new Label("Щифровка шифром Виженера");
+        titleLabel1.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        Label titleLabel2 = new Label("Расшифровка шифра Виженера");
+        titleLabel2.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        
+        // Поле для ввода текста
+        TextField inputText1 = new TextField();
+        inputText1.setPromptText("Введите текст для шифровки...");
+        inputText1.setStyle("-fx-padding: 10; -fx-font-size: 14px;");
+        
+        TextField inputText2 = new TextField();
+        inputText2.setPromptText("Введите текст для расшифровки...");
+        inputText2.setStyle("-fx-padding: 10; -fx-font-size: 14px;");
+        // Поле для ключа
+        TextField keyText1 = new TextField();
+        keyText1.setPromptText("Введите ключ...");
+        keyText1.setStyle("-fx-padding: 10; -fx-font-size: 14px;");
+                
+        TextField keyText2 = new TextField();
+        keyText2.setPromptText("Введите ключ...");
+        keyText2.setStyle("-fx-padding: 10; -fx-font-size: 14px;");
+        
+        // Поле для результата
+        TextField resultText1 = new TextField();
+        resultText1.setPromptText("Результат шифровки...");
+        resultText1.setEditable(false);
+        resultText1.setStyle("-fx-padding: 10; -fx-font-size: 14px; -fx-background-color: #f5f5f5;");
 
-        encryption.setOnAction(event -> {
-            textEncrypt.setText("");
-            String text = textForEncr.getText().toLowerCase();
-            String key = textKey.getText().toLowerCase();
+        TextField resultText2 = new TextField();
+        resultText2.setPromptText("Результат расшифровки...");
+        resultText2.setEditable(false);
+        resultText2.setStyle("-fx-padding: 10; -fx-font-size: 14px; -fx-background-color: #f5f5f5;");
+
+        
+        // Кнопка шифровки
+        Button encryptBtn = new Button("Зашифровать");
+        encryptBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5;");
+        
+        Button decryptBtn = new Button("Расшифровать");
+        decryptBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5;");
+        // Эффект при наведении
+        encryptBtn.setOnMouseEntered(e -> 
+            encryptBtn.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5;"));
+        encryptBtn.setOnMouseExited(e -> 
+            encryptBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5;"));
+        
+        // Логика шифровки
+        encryptBtn.setOnAction(event -> {
+            resultText1.setText("");
+            String text = inputText1.getText().toLowerCase();
+            String key = keyText1.getText().toLowerCase();
 
             StringBuilder res = logic.Vijner(text, key);
             
             // Анимация при появлении результата
-            textEncrypt.setStyle("-fx-background-color: #e8f5e9; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #27ae60; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(gaussian, #27ae60, 10, 0, 0, 0);");
-            textEncrypt.setText(res.toString());
+            resultText1.setStyle("-fx-background-color: #e8f5e9; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #27ae60; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(gaussian, #27ae60, 10, 0, 0, 0);");
+            resultText1.setText(res.toString());
             
             // Возврат к обычному стилю через секунду
             javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(0.5));
-            pause.setOnFinished(e -> textEncrypt.setStyle("-fx-background-color: #f5f5f5; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #3498db; -fx-border-radius: 5; -fx-background-radius: 5;"));
+            pause.setOnFinished(e -> resultText1.setStyle("-fx-background-color: #f5f5f5; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #3498db; -fx-border-radius: 5; -fx-background-radius: 5;"));
             pause.play();
         }); //  этот метод вызывает лямбда функцию после нажатия
-
-        decryption.setOnAction(event -> {
-            textEncrypt.setText("");
-            String text = textForEncr.getText().toLowerCase();
-            String key = textKey.getText().toLowerCase();
-            System.out.println(text);
-            System.out.println(key);
+        
+        decryptBtn.setOnAction(event -> {
+            resultText2.setText("");
+            String text = inputText2.getText().toLowerCase();
+            String key = keyText2.getText().toLowerCase();
 
             StringBuilder res = logic.VijnerDecryption(text, key);
             
             // Анимация при появлении результата
-            textEncrypt.setStyle("-fx-background-color: #e8f5e9; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #27ae60; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(gaussian, #27ae60, 10, 0, 0, 0);");
-            textEncrypt.setText(res.toString());
+            resultText2.setStyle("-fx-background-color: #e8f5e9; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #27ae60; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(gaussian, #27ae60, 10, 0, 0, 0);");
+            resultText2.setText(res.toString());
             
             // Возврат к обычному стилю через секунду
             javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(0.5));
-            pause.setOnFinished(e -> textEncrypt.setStyle("-fx-background-color: #f5f5f5; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #3498db; -fx-border-radius: 5; -fx-background-radius: 5;"));
+            pause.setOnFinished(e -> resultText2.setStyle("-fx-background-color: #f5f5f5; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-padding: 10; -fx-border-color: #3498db; -fx-border-radius: 5; -fx-background-radius: 5;"));
             pause.play();
         });
 
-        HBox hbox = new HBox(10);
-        hbox.getChildren().addAll(encryption, decryption, decipherment);
-        // Стили для контейнера с кнопками
-        hbox.setStyle("-fx-alignment: center; -fx-padding: 10;");
+        // Кнопка очистки
+        Button clearBtn1 = new Button("Очистить");
+        clearBtn1.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5;");
+        clearBtn1.setOnAction(e -> {
+            inputText1.clear();
+            keyText1.clear();
+            resultText1.clear();
+        });
+        
+        clearBtn1.setOnMouseEntered(e -> 
+            clearBtn1.setStyle("-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5;"));
+        clearBtn1.setOnMouseExited(e -> 
+            clearBtn1.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5;"));
 
-        VBox vbox = new VBox(10); // создаем VBox и задаем по 10 пикселей между элементами
-        vbox.getChildren().addAll(label, hbox, textForEncr, textKey, textEncrypt);
-        // Стили для главного контейнера
-        vbox.setStyle("-fx-padding: 20; -fx-background-color: linear-gradient(to bottom, #ecf0f1, #bdc3c7); -fx-border-color: #34495e; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10;");
+        Button clearBtn2 = new Button("Очистить");
+        clearBtn2.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5;");
+        clearBtn2.setOnAction(e -> {
+            inputText2.clear();
+            keyText2.clear();
+            resultText2.clear();
+        });
+        
+        clearBtn2.setOnMouseEntered(e -> 
+            clearBtn2.setStyle("-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5;"));
+        clearBtn2.setOnMouseExited(e -> 
+            clearBtn2.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5;"));
+        
+        // Контейнер для кнопок
+        HBox buttonBox1 = new HBox(10, encryptBtn, clearBtn1);
+        buttonBox1.setStyle("-fx-alignment: center;");
+        
 
-        //Создаем сцену и показываем
-        Scene scene = new Scene(vbox, 500, 400); // увеличил размер, чтобы все влезло красиво
-        stage.setTitle("Крипто-шифровальщик"); // добавил заголовок окна
+        HBox buttonBox2 = new HBox(10, decryptBtn, clearBtn2);
+        buttonBox2.setStyle("-fx-alignment: center;");
+        // Собираем всё вместе
+        encryptContent.getChildren().addAll(
+            titleLabel1, 
+            new Label("Исходный текст:"), inputText1,
+            new Label("Ключ:"), keyText1,
+            buttonBox1,
+            new Label("Результат:"), resultText1
+        );
+
+        dencryptContent.getChildren().addAll(
+            titleLabel2, 
+            new Label("Исходный текст:"), inputText2,
+            new Label("Ключ:"), keyText2,
+            buttonBox2,
+            new Label("Результат:"), resultText2
+        );
+        
+        encryptTab.setContent(encryptContent);
+        decryptTab.setContent(dencryptContent);
+        
+        // Добавляем вкладку в панель
+        tabPane.getTabs().addAll(encryptTab, decryptTab);
+        
+        // Создаём сцену
+        Scene scene = new Scene(tabPane, 500, 500);
+        stage.setTitle("Шифр Виженера");
         stage.setScene(scene);
         stage.show();
     }
@@ -130,3 +186,6 @@ public class Main extends Application {
         launch();
     }
 }
+
+
+
